@@ -88,7 +88,7 @@ Non inventare URL o date. Se non trovi novità affidabili, usa liste vuote.
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "tools": [{"google_search": {}}],
-        "generationConfig": {"temperature": 0.2, "responseMimeType": "application/json"},
+        "generationConfig": {"responseMimeType": "application/json"},
     }
     response = requests.post(
         API_URL,
@@ -133,8 +133,6 @@ def normalize(data: dict, ai: dict, grounded_sources: list[dict]) -> tuple[int, 
             url = source.get("url")
             if url in allowed:
                 sources.append({"title": str(source.get("title") or allowed[url]["title"])[:200], "url": url})
-        if not sources and grounded_sources:
-            sources = grounded_sources[:3]
         if not sources:
             continue
         research.append({
