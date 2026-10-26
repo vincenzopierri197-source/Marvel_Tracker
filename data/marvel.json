@@ -1,14 +1,13 @@
 {
   "source": "https://www.sorrisi.com/cinema/migliori-film/la-lista-dei-film-marvel-ordine-cronologico/",
   "updatedAt": null,
-
   "orders": {
-
     "marvel": {
       "name": "Ordine Marvel",
       "sections": [
         {
-          "phase": "Saga dell'Infinito — Fase 1",
+          "saga": "Saga dell'Infinito",
+          "phase": "Fase 1",
           "items": [
             {
               "title": "Iron Man",
@@ -41,311 +40,927 @@
               "year": 2012
             }
           ]
+        },
+        {
+          "saga": "Saga dell'Infinito",
+          "phase": "Fase 2",
+          "items": [
+            {
+              "title": "Iron Man 3",
+              "type": "film",
+              "year": 2013
+            },
+            {
+              "title": "Thor: The Dark World",
+              "type": "film",
+              "year": 2013
+            },
+            {
+              "title": "Captain America: The Winter Soldier",
+              "type": "film",
+              "year": 2014
+            },
+            {
+              "title": "Guardiani della Galassia",
+              "type": "film",
+              "year": 2014
+            },
+            {
+              "title": "Avengers: Age of Ultron",
+              "type": "film",
+              "year": 2015
+            },
+            {
+              "title": "Agente Carter - serie",
+              "type": "serie",
+              "year": 2015
+            },
+            {
+              "title": "Ant-Man",
+              "type": "film",
+              "year": 2015
+            }
+          ]
+        },
+        {
+          "saga": "Saga dell'Infinito",
+          "phase": "Fase 3",
+          "items": [
+            {
+              "title": "Captain America: Civil War",
+              "type": "film",
+              "year": 2016
+            },
+            {
+              "title": "Doctor Strange",
+              "type": "film",
+              "year": 2016
+            },
+            {
+              "title": "Guardiani della Galassia Vol. 2",
+              "type": "film",
+              "year": 2017
+            },
+            {
+              "title": "Spider-Man: Homecoming",
+              "type": "film",
+              "year": 2017
+            },
+            {
+              "title": "Thor: Ragnarok",
+              "type": "film",
+              "year": 2017
+            },
+            {
+              "title": "Black Panther",
+              "type": "film",
+              "year": 2018
+            },
+            {
+              "title": "Ant-Man and the Wasp",
+              "type": "film",
+              "year": 2018
+            },
+            {
+              "title": "Avengers: Infinity War",
+              "type": "film",
+              "year": 2018
+            },
+            {
+              "title": "Captain Marvel",
+              "type": "film",
+              "year": 2019
+            },
+            {
+              "title": "Avengers: Endgame",
+              "type": "film",
+              "year": 2019
+            },
+            {
+              "title": "Spider-Man: Far From Home",
+              "type": "film",
+              "year": 2019
+            }
+          ]
+        },
+        {
+          "saga": "Saga del Multiverso",
+          "phase": "Fase 4",
+          "items": [
+            {
+              "title": "WandaVision",
+              "type": "serie",
+              "year": 2021
+            },
+            {
+              "title": "The Falcon and the Winter Soldier - serie",
+              "type": "serie",
+              "year": 2021
+            },
+            {
+              "title": "Loki - serie",
+              "type": "serie",
+              "year": 2021
+            },
+            {
+              "title": "Black Widow",
+              "type": "film",
+              "year": 2021
+            },
+            {
+              "title": "What If…? - serie",
+              "type": "serie",
+              "year": 2021
+            },
+            {
+              "title": "Shang-Chi e la Leggenda dei Dieci Anelli",
+              "type": "film",
+              "year": 2021
+            },
+            {
+              "title": "Eternals",
+              "type": "film",
+              "year": 2021
+            },
+            {
+              "title": "Hawkeye - serie",
+              "type": "serie",
+              "year": 2021
+            },
+            {
+              "title": "Spider-Man: No Way Home",
+              "type": "film",
+              "year": 2021
+            },
+            {
+              "title": "Moon Knight - serie",
+              "type": "serie",
+              "year": 2022
+            },
+            {
+              "title": "Doctor Strange nel Multiverso della Follia",
+              "type": "film",
+              "year": 2022
+            },
+            {
+              "title": "Ms. Marvel - serie",
+              "type": "serie",
+              "year": 2022
+            },
+            {
+              "title": "Thor: Love and Thunder",
+              "type": "film",
+              "year": 2022
+            },
+            {
+              "title": "She-Hulk: Attorney at Law - serie",
+              "type": "serie",
+              "year": 2022
+            },
+            {
+              "title": "Black Panther: Wakanda Forever",
+              "type": "film",
+              "year": 2022
+            }
+          ]
+        },
+        {
+          "saga": "Saga del Multiverso",
+          "phase": "Fase 5",
+          "items": [
+            {
+              "title": "Ant-Man and the Wasp: Quantumania",
+              "type": "film",
+              "year": 2023
+            },
+            {
+              "title": "Guardiani della Galassia Vol. 3",
+              "type": "film",
+              "year": 2023
+            },
+            {
+              "title": "Secret Invasion - serie",
+              "type": "serie",
+              "year": 2023
+            },
+            {
+              "title": "Loki - serie (seconda stagione)",
+              "type": "serie",
+              "year": 2023
+            },
+            {
+              "title": "The Marvels",
+              "type": "film",
+              "year": 2023
+            },
+            {
+              "title": "What If…? - serie (stagione 2)",
+              "type": "serie",
+              "year": 2023
+            },
+            {
+              "title": "Echo - serie",
+              "type": "serie",
+              "year": 2024
+            },
+            {
+              "title": "Deadpool & Wolverine",
+              "type": "film",
+              "year": 2024
+            },
+            {
+              "title": "Agatha: All Along - serie",
+              "type": "serie",
+              "year": 2024
+            },
+            {
+              "title": "Captain America: Brave New World",
+              "type": "film",
+              "year": 2025
+            },
+            {
+              "title": "Daredevil: Rinascita - serie",
+              "type": "serie",
+              "year": 2025
+            },
+            {
+              "title": "Thunderbolts*",
+              "type": "film",
+              "year": 2025
+            },
+            {
+              "title": "Ironheart - serie",
+              "type": "serie",
+              "year": 2025
+            }
+          ]
+        },
+        {
+          "saga": "Saga del Multiverso",
+          "phase": "Fase 6",
+          "items": [
+            {
+              "title": "I Fantastici Quattro: Gli Inizi",
+              "type": "film",
+              "year": 2025
+            },
+            {
+              "title": "Eyes of Wakanda - serie",
+              "type": "serie",
+              "year": 2025
+            },
+            {
+              "title": "Marvel Zombies - serie",
+              "type": "serie",
+              "year": 2025
+            },
+            {
+              "title": "Wonder Man - serie",
+              "type": "serie",
+              "year": 2026
+            },
+            {
+              "title": "Daredevil: Rinascita 2",
+              "type": "serie",
+              "year": 2026
+            },
+            {
+              "title": "X-Men '97 2 - serie",
+              "type": "serie",
+              "year": 2026
+            },
+            {
+              "title": "Spider-Man: Brand New Day",
+              "type": "film",
+              "year": 2026
+            },
+            {
+              "title": "Il vostro amichevole Spider-Man di quartiere 2",
+              "type": "serie",
+              "year": 2026
+            },
+            {
+              "title": "Avengers: Doomsday",
+              "type": "film",
+              "year": 2026
+            },
+            {
+              "title": "VisionQuest",
+              "type": "serie",
+              "year": 2026
+            },
+            {
+              "title": "Avengers: Secret Wars",
+              "type": "film",
+              "year": 2027
+            }
+          ]
+        },
+        {
+          "saga": "Saga del Multiverso",
+          "phase": "Fase 7",
+          "items": [
+            {
+              "title": "Ghost Rider",
+              "type": "film",
+              "year": 2028
+            },
+            {
+              "title": "Black Panther 3",
+              "type": "film",
+              "year": 2028
+            },
+            {
+              "title": "Film sugli X-Men",
+              "type": "film",
+              "year": 2028
+            }
+          ]
         }
-
-        /* ... resto dell'ordine Marvel ... */
       ]
     },
-
     "release": {
       "name": "Ordine di uscita",
       "sections": [
         {
+          "saga": "Ordine di uscita",
           "phase": "2008",
           "items": [
             {
               "title": "Iron Man",
               "type": "film",
-              "year": 2008
+              "year": 2008,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 1"
             },
             {
               "title": "L'Incredibile Hulk",
               "type": "film",
-              "year": 2008
+              "year": 2008,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 1"
             }
           ]
         },
-
         {
+          "saga": "Ordine di uscita",
           "phase": "2010",
           "items": [
             {
               "title": "Iron Man 2",
               "type": "film",
-              "year": 2010
+              "year": 2010,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 1"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2011",
+          "items": [
+            {
+              "title": "Captain America: Il Primo Vendicatore",
+              "type": "film",
+              "year": 2011,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 1"
+            },
+            {
+              "title": "Thor",
+              "type": "film",
+              "year": 2011,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 1"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2012",
+          "items": [
+            {
+              "title": "Avengers",
+              "type": "film",
+              "year": 2012,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 1"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2013",
+          "items": [
+            {
+              "title": "Iron Man 3",
+              "type": "film",
+              "year": 2013,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            },
+            {
+              "title": "Thor: The Dark World",
+              "type": "film",
+              "year": 2013,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2014",
+          "items": [
+            {
+              "title": "Captain America: The Winter Soldier",
+              "type": "film",
+              "year": 2014,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            },
+            {
+              "title": "Guardiani della Galassia",
+              "type": "film",
+              "year": 2014,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2015",
+          "items": [
+            {
+              "title": "Agente Carter - serie",
+              "type": "serie",
+              "year": 2015,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            },
+            {
+              "title": "Ant-Man",
+              "type": "film",
+              "year": 2015,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            },
+            {
+              "title": "Avengers: Age of Ultron",
+              "type": "film",
+              "year": 2015,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 2"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2016",
+          "items": [
+            {
+              "title": "Captain America: Civil War",
+              "type": "film",
+              "year": 2016,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Doctor Strange",
+              "type": "film",
+              "year": 2016,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2017",
+          "items": [
+            {
+              "title": "Guardiani della Galassia Vol. 2",
+              "type": "film",
+              "year": 2017,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Spider-Man: Homecoming",
+              "type": "film",
+              "year": 2017,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Thor: Ragnarok",
+              "type": "film",
+              "year": 2017,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2018",
+          "items": [
+            {
+              "title": "Ant-Man and the Wasp",
+              "type": "film",
+              "year": 2018,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Avengers: Infinity War",
+              "type": "film",
+              "year": 2018,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Black Panther",
+              "type": "film",
+              "year": 2018,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2019",
+          "items": [
+            {
+              "title": "Avengers: Endgame",
+              "type": "film",
+              "year": 2019,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Captain Marvel",
+              "type": "film",
+              "year": 2019,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            },
+            {
+              "title": "Spider-Man: Far From Home",
+              "type": "film",
+              "year": 2019,
+              "saga": "Saga dell'Infinito",
+              "originalPhase": "Fase 3"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2021",
+          "items": [
+            {
+              "title": "Black Widow",
+              "type": "film",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Eternals",
+              "type": "film",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Hawkeye - serie",
+              "type": "serie",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Loki - serie",
+              "type": "serie",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Shang-Chi e la Leggenda dei Dieci Anelli",
+              "type": "film",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Spider-Man: No Way Home",
+              "type": "film",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "The Falcon and the Winter Soldier - serie",
+              "type": "serie",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "WandaVision",
+              "type": "serie",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "What If…? - serie",
+              "type": "serie",
+              "year": 2021,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2022",
+          "items": [
+            {
+              "title": "Black Panther: Wakanda Forever",
+              "type": "film",
+              "year": 2022,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Doctor Strange nel Multiverso della Follia",
+              "type": "film",
+              "year": 2022,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Moon Knight - serie",
+              "type": "serie",
+              "year": 2022,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Ms. Marvel - serie",
+              "type": "serie",
+              "year": 2022,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "She-Hulk: Attorney at Law - serie",
+              "type": "serie",
+              "year": 2022,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            },
+            {
+              "title": "Thor: Love and Thunder",
+              "type": "film",
+              "year": 2022,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 4"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2023",
+          "items": [
+            {
+              "title": "Ant-Man and the Wasp: Quantumania",
+              "type": "film",
+              "year": 2023,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Guardiani della Galassia Vol. 3",
+              "type": "film",
+              "year": 2023,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Loki - serie (seconda stagione)",
+              "type": "serie",
+              "year": 2023,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Secret Invasion - serie",
+              "type": "serie",
+              "year": 2023,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "The Marvels",
+              "type": "film",
+              "year": 2023,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "What If…? - serie (stagione 2)",
+              "type": "serie",
+              "year": 2023,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2024",
+          "items": [
+            {
+              "title": "Agatha: All Along - serie",
+              "type": "serie",
+              "year": 2024,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Deadpool & Wolverine",
+              "type": "film",
+              "year": 2024,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Echo - serie",
+              "type": "serie",
+              "year": 2024,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2025",
+          "items": [
+            {
+              "title": "Captain America: Brave New World",
+              "type": "film",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Daredevil: Rinascita - serie",
+              "type": "serie",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Eyes of Wakanda - serie",
+              "type": "serie",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "I Fantastici Quattro: Gli Inizi",
+              "type": "film",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "Ironheart - serie",
+              "type": "serie",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            },
+            {
+              "title": "Marvel Zombies - serie",
+              "type": "serie",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "Thunderbolts*",
+              "type": "film",
+              "year": 2025,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 5"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2026",
+          "items": [
+            {
+              "title": "Avengers: Doomsday",
+              "type": "film",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "Daredevil: Rinascita 2",
+              "type": "serie",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "Il vostro amichevole Spider-Man di quartiere 2",
+              "type": "serie",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "Spider-Man: Brand New Day",
+              "type": "film",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "VisionQuest",
+              "type": "serie",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "Wonder Man - serie",
+              "type": "serie",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            },
+            {
+              "title": "X-Men '97 2 - serie",
+              "type": "serie",
+              "year": 2026,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2027",
+          "items": [
+            {
+              "title": "Avengers: Secret Wars",
+              "type": "film",
+              "year": 2027,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 6"
+            }
+          ]
+        },
+        {
+          "saga": "Ordine di uscita",
+          "phase": "2028",
+          "items": [
+            {
+              "title": "Black Panther 3",
+              "type": "film",
+              "year": 2028,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 7"
+            },
+            {
+              "title": "Film sugli X-Men",
+              "type": "film",
+              "year": 2028,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 7"
+            },
+            {
+              "title": "Ghost Rider",
+              "type": "film",
+              "year": 2028,
+              "saga": "Saga del Multiverso",
+              "originalPhase": "Fase 7"
             }
           ]
         }
-
-        /* ... resto ordinato per anno ... */
       ]
     }
-
-  }
-}          "title": "Thor: The Dark World",
-          "type": "film"
-        },
-        {
-          "title": "Iron Man 3",
-          "type": "film"
-        },
-        {
-          "title": "Captain America: The Winter Soldier",
-          "type": "film"
-        },
-        {
-          "title": "Guardiani della Galassia",
-          "type": "film"
-        },
-        {
-          "title": "Guardiani della Galassia: Volume 2",
-          "type": "film"
-        },
-        {
-          "title": "I Am Groot",
-          "type": "serie"
-        },
-        {
-          "title": "Avengers: Age of Ultron",
-          "type": "film"
-        },
-        {
-          "title": "Ant-Man",
-          "type": "film"
-        },
-        {
-          "title": "Captain America: Civil War",
-          "type": "film"
-        },
-        {
-          "title": "Black Widow",
-          "type": "film"
-        },
-        {
-          "title": "Black Panther",
-          "type": "film"
-        },
-        {
-          "title": "Spider-Man: Homecoming",
-          "type": "film"
-        },
-        {
-          "title": "Doctor Strange",
-          "type": "film"
-        },
-        {
-          "title": "Thor: Ragnarok",
-          "type": "film"
-        },
-        {
-          "title": "Ant-Man and the Wasp",
-          "type": "film"
-        },
-        {
-          "title": "Avengers: Infinity War",
-          "type": "film"
-        },
-        {
-          "title": "Avengers: Endgame",
-          "type": "film"
-        },
-        {
-          "title": "Loki (Stagione 1)",
-          "type": "serie"
-        },
-        {
-          "title": "What If…? (Stagione 1)",
-          "type": "serie"
-        },
-        {
-          "title": "WandaVision",
-          "type": "serie"
-        },
-        {
-          "title": "The Falcon and the Winter Soldier",
-          "type": "serie"
-        },
-        {
-          "title": "Spider-Man: Far From Home",
-          "type": "film"
-        },
-        {
-          "title": "Shang-Chi e la leggenda dei Dieci Anelli",
-          "type": "film"
-        },
-        {
-          "title": "Spider-Man: No Way Home",
-          "type": "film"
-        },
-        {
-          "title": "Eternals",
-          "type": "film"
-        },
-        {
-          "title": "Doctor Strange nel Multiverso della Follia",
-          "type": "film"
-        },
-        {
-          "title": "Hawkeye",
-          "type": "serie"
-        },
-        {
-          "title": "Moon Knight",
-          "type": "serie"
-        },
-        {
-          "title": "She-Hulk: Attorney at Law",
-          "type": "serie"
-        },
-        {
-          "title": "Ms. Marvel",
-          "type": "serie"
-        },
-        {
-          "title": "Thor: Love and Thunder",
-          "type": "film"
-        },
-        {
-          "title": "Licantropus",
-          "type": "serie"
-        },
-        {
-          "title": "Black Panther: Wakanda Forever",
-          "type": "film"
-        },
-        {
-          "title": "Guardiani della Galassia Holiday Special",
-          "type": "film"
-        },
-        {
-          "title": "Ant-Man and the Wasp: Quantumania",
-          "type": "film"
-        },
-        {
-          "title": "Guardiani della Galassia Vol. 3",
-          "type": "film"
-        },
-        {
-          "title": "Secret Invasion",
-          "type": "serie"
-        },
-        {
-          "title": "The Marvels",
-          "type": "film"
-        }
-      ]
-    },
-    {
-      "phase": "Recuperi & Chiusura Fase 5",
-      "items": [
-        {
-          "title": "Agente Carter (Serie)",
-          "type": "serie"
-        },
-        {
-          "title": "Loki (Stagione 2)",
-          "type": "serie"
-        },
-        {
-          "title": "What If…? (Stagione 2)",
-          "type": "serie"
-        },
-        {
-          "title": "Echo",
-          "type": "serie"
-        },
-        {
-          "title": "Deadpool & Wolverine",
-          "type": "film"
-        },
-        {
-          "title": "Agatha All Along",
-          "type": "serie"
-        },
-        {
-          "title": "Captain America: Brave New World",
-          "type": "film"
-        },
-        {
-          "title": "Daredevil: Rinascita",
-          "type": "serie"
-        },
-        {
-          "title": "Thunderbolts*",
-          "type": "film"
-        },
-        {
-          "title": "Ironheart",
-          "type": "serie"
-        }
-      ]
-    },
-    {
-      "phase": "Fase 6 (2025 - 2027)",
-      "items": [
-        {
-          "title": "I Fantastici Quattro: Gli Inizi",
-          "type": "film"
-        },
-        {
-          "title": "Eyes of Wakanda",
-          "type": "serie"
-        },
-        {
-          "title": "Marvel Zombies",
-          "type": "serie"
-        },
-        {
-          "title": "Wonder Man",
-          "type": "serie"
-        },
-        {
-          "title": "Daredevil: Rinascita 2",
-          "type": "serie"
-        },
-        {
-          "title": "X-Men '97 (Stagione 1 & 2)",
-          "type": "serie"
-        },
-        {
-          "title": "Spider-Man: Brand New Day",
-          "type": "film"
-        },
-        {
-          "title": "Il vostro amichevole Spider-Man di quartiere (St. 1 & 2)",
-          "type": "serie"
-        },
-        {
-          "title": "VisionQuest",
-          "type": "film"
-        },
-        {
-          "title": "Avengers: Doomsday",
-          "type": "film"
-        },
-        {
-          "title": "Avengers: Secret Wars",
-          "type": "film"
-        }
-      ]
-    },
-    {
-      "phase": "Fase 7 (Oltre il 2027)",
-      "items": [
-        {
-          "title": "Ghost Rider",
-          "type": "film"
-        },
-        {
-          "title": "Black Panther 3",
-          "type": "film"
-        },
-        {
-          "title": "Film sugli X-Men",
-          "type": "film"
-        }
-      ]
-    }
-  ],
-  "sourceUpdates": []
+  },
+  "sourceUpdates": [],
+  "researchUpdates": []
 }
