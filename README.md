@@ -6,7 +6,8 @@ Tracker responsive per film e serie Marvel, con progressi personali sincronizzat
 
 - Ordine Marvel e ordine di uscita.
 - Ricerca e filtri Film / Serie.
-- Progressi salvati nel database Firebase per codice profilo.
+- Autenticazione anonima Firebase e progressi salvati per UID autenticato.
+- Importazione dei progressi da un profilo legacy con codice a sei caratteri.
 - Novità recenti ricercate tramite Gemini 3.5 Flash-Lite con Google Search grounding.
 - Link alle fonti restituite da Google Search; le sezioni curate manualmente non vengono riscritte dall'AI.
 - Aggiornamento e pubblicazione programmati tramite GitHub Actions e GitHub Pages.
@@ -30,9 +31,18 @@ Non inserire mai la chiave in `index.html`, in un file JSON o in un commit. Il s
 
 Il workflow è programmato ogni giorno alle **05:17 UTC** e può essere avviato manualmente. Quando l'aggiornamento riesce, pubblica il sito e salva il catalogo aggiornato nel repository.
 
-### 3. Verifica Firebase
+### 3. Firebase Authentication e migrazione dei profili
 
-Il frontend usa il progetto Firebase già configurato nel repository. Controlla in Firebase Console → Realtime Database → Rules che gli utenti possano leggere e aggiornare solo il proprio profilo. Il codice profilo a sei caratteri è un identificatore semplice, non un sistema di autenticazione forte: non archiviare dati sensibili. Le configurazioni Firebase client sono visibili nel browser; la sicurezza dipende dalle regole del database.
+1. In Firebase Console → **Authentication → Sign-in method**, abilita **Anonymous**.
+2. La nuova versione crea/riusa un'identità anonima persistente nel browser e salva i progressi in users/<auth.uid>/progress.
+3. Per importare un profilo precedente, usa **Importa progressi esistenti** oppure lascia che l'app provi a importare il vecchio codice salvato nel browser.
+4. Il file database.rules.json contiene le regole restrittive per i profili associati a UID autenticati.
+
+**Non pubblicare ancora le regole restrittive.** Prima occorre completare e verificare la migrazione dei profili legacy. Le regole attuali consentono lettura e scrittura pubbliche, e il vecchio codice a sei caratteri non dimostra la proprietà del profilo: chiunque conosca o indovini il codice potrebbe importare quei progressi. La migrazione client è una misura transitoria, non una verifica sicura della proprietà. Per un cutover senza questa finestra di rischio, serve una procedura amministrativa fidata (ad esempio uno script Admin SDK eseguito dal proprietario del progetto) per associare i dati ai nuovi UID.
+
+Le regole restrittive impediscono l'accesso ai vecchi percorsi users/<codice> dopo il cutover; non applicarle finché non è stata decisa e verificata la strategia per i profili che non hanno ancora migrato. L'autenticazione anonima è legata al browser/dispositivo e non permette da sola il recupero dell'account su un altro dispositivo.
+
+Le configurazioni Firebase client sono visibili nel browser; la sicurezza effettiva dipende dalle regole del database.
 
 ## Come funziona l'aggiornamento
 
