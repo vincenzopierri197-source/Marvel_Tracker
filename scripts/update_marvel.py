@@ -276,7 +276,7 @@ def main() -> int:
                 "message": "Quota Gemini esaurita (HTTP 429). Aggiornamento AI rinviato; catalogo precedente mantenuto.",
             }
             DATA_FILE.write_text(
-                json.dumps(data, ensure_ascii=False, indent=2) + "\\n",
+                json.dumps(data, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
             print(
