@@ -4,8 +4,14 @@
     ".write": false,
     "users": {
       "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "profileCodes": {
+      "$shortCode": {
+        ".read": "auth != null",
+        ".write": "auth != null && !data.exists() && newData.child('uid').val() == auth.uid"
       }
     }
   }
