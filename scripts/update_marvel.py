@@ -223,6 +223,17 @@ def normalize(data: dict, ai: dict, grounded_sources: list[dict]) -> tuple[int, 
     return len(data["researchUpdates"]), len(proposed)
 
 
+
+def is_gemini_quota_error(exc: Exception) -> bool:
+    """Riconosce l'esaurimento quota Gemini, distinto dagli errori applicativi."""
+    message = str(exc).upper()
+    return "GEMINI API HTTP 429" in message and (
+        "RESOURCE_EXHAUSTED" in message
+        or "EXCEEDED YOUR CURRENT QUOTA" in message
+        or "QUOTA" in message
+    )
+
+
 def main() -> int:
     if not DATA_FILE.exists():
         print(f"ERRORE: file dati mancante: {DATA_FILE}", file=sys.stderr)
@@ -256,6 +267,24 @@ def main() -> int:
         print(f"Aggiornamento completato: {news_count} notizie con fonti, {new_titles} nuovi titoli proposti, {len(sources)} fonti grounding.")
         return 0
     except Exception as exc:
+        if is_gemini_quota_error(exc):
+            # La quota Gemini è un limite esterno: non sovrascrivere i dati validi
+            # e non bloccare la pubblicazione del sito con l'ultimo catalogo noto.
+            data["lastUpdate"] = {
+                "status": "quota_exceeded",
+                "model": MODEL + " + " + GROQ_MODEL,
+                "message": "Quota Gemini esaurita (HTTP 429). Aggiornamento AI rinviato; catalogo precedente mantenuto.",
+            }
+            DATA_FILE.write_text(
+                json.dumps(data, ensure_ascii=False, indent=2) + "\\n",
+                encoding="utf-8",
+            )
+            print(
+                "AVVISO: quota Gemini esaurita (HTTP 429). "
+                "Mantengo il catalogo esistente e continuo con la pubblicazione.",
+                file=sys.stderr,
+            )
+            return 0
         print(f"ERRORE aggiornamento Gemini/Groq: {exc}", file=sys.stderr)
         return 1
 
