@@ -1,9 +1,17 @@
 import unittest
 
-from scripts.update_marvel import extract_json, normalize, slug
+from scripts.update_marvel import extract_json, is_gemini_quota_error, normalize, slug
 
 
 class UpdateMarvelTests(unittest.TestCase):
+
+    def test_gemini_quota_error_is_detected(self):
+        exc = RuntimeError('Gemini API HTTP 429: RESOURCE_EXHAUSTED - You exceeded your current quota')
+        self.assertTrue(is_gemini_quota_error(exc))
+
+    def test_other_errors_are_not_misclassified_as_quota(self):
+        self.assertFalse(is_gemini_quota_error(RuntimeError("Groq API HTTP 429: rate limit")))
+
     def test_slug_normalizes_accents(self):
         self.assertEqual(slug("I Fantastici Quattro: Gli Inizi"), "i-fantastici-quattro-gli-inizi")
 
