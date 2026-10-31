@@ -22,6 +22,8 @@ DATA_FILE = ROOT / "data" / "marvel.json"
 MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 TIMEOUT = 90
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
 def slug(value: str) -> str:
@@ -119,6 +121,43 @@ Non inventare URL o date. Se non trovi novità affidabili, usa liste vuote.
     return parsed, grounded_sources, queries
 
 
+def call_groq(api_key: str, gemini_result: dict, grounded_sources: list[dict]) -> dict:
+    """Usa Groq per rifinire il JSON, senza permettere fonti fuori dal grounding Google."""
+    system = (
+        "Sei un redattore italiano. Restituisci esclusivamente JSON valido con le chiavi "
+        "researchUpdates e sourceUpdates. Non aggiungere fatti, date, titoli o URL non "
+        "presenti nell'input. Mantieni soltanto URL presenti nell'elenco delle fonti Google."
+    )
+    user = {
+        "geminiResearch": gemini_result,
+        "googleGroundedSources": grounded_sources,
+        "requiredSchema": {
+            "researchUpdates": [{"title": "", "summary": "", "date": "", "sources": [{"title": "", "url": ""}]}],
+            "sourceUpdates": [{"title": "", "type": "film oppure serie", "year": 2027, "source": ""}]
+        }
+    }
+    response = requests.post(
+        GROQ_API_URL,
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        json={
+            "model": GROQ_MODEL,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": json.dumps(user, ensure_ascii=False)}
+            ],
+            "temperature": 0.1,
+            "response_format": {"type": "json_object"}
+        },
+        timeout=TIMEOUT,
+    )
+    if not response.ok:
+        raise RuntimeError(f"Groq API HTTP {response.status_code}: {response.text[:1200]}")
+    choices = response.json().get("choices") or []
+    if not choices:
+        raise RuntimeError("Groq non ha restituito risposte.")
+    return extract_json(choices[0].get("message", {}).get("content", ""))
+
+
 def normalize(data: dict, ai: dict, grounded_sources: list[dict]) -> tuple[int, int]:
     # Allowlist: the AI may only emit source URLs actually returned by Google grounding.
     allowed = {s["url"]: s for s in grounded_sources}
@@ -196,17 +235,20 @@ def main() -> int:
     if not data.get("orders", {}).get("marvel", {}).get("sections"):
         print("ERRORE: schema orders.marvel.sections mancante; non sovrascrivo il catalogo.", file=sys.stderr)
         return 1
-    api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    if not api_key:
-        print("ERRORE: configura GEMINI_API_KEY in Settings → Secrets and variables → Actions.", file=sys.stderr)
+    gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
+    groq_key = os.getenv("GROQ_API_KEY", "").strip()
+    if not gemini_key or not groq_key:
+        missing = [name for name, value in (("GEMINI_API_KEY", gemini_key), ("GROQ_API_KEY", groq_key)) if not value]
+        print("ERRORE: configura i secrets GitHub mancanti: " + ", ".join(missing), file=sys.stderr)
         return 1
     try:
-        ai, sources, queries = call_gemini(api_key, data)
+        gemini_result, sources, queries = call_gemini(gemini_key, data)
+        ai = call_groq(groq_key, gemini_result, sources)
         news_count, new_titles = normalize(data, ai, sources)
         data["updatedAt"] = datetime.now(timezone.utc).isoformat()
         data["lastUpdate"] = {
             "status": "success",
-            "model": MODEL,
+            "model": MODEL + " + " + GROQ_MODEL,
             "sourceCount": len(sources),
             "searchQueries": queries[:10],
         }
@@ -214,7 +256,7 @@ def main() -> int:
         print(f"Aggiornamento completato: {news_count} notizie con fonti, {new_titles} nuovi titoli proposti, {len(sources)} fonti grounding.")
         return 0
     except Exception as exc:
-        print(f"ERRORE aggiornamento Gemini: {exc}", file=sys.stderr)
+        print(f"ERRORE aggiornamento Gemini/Groq: {exc}", file=sys.stderr)
         return 1
 
 
