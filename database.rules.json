@@ -9,10 +9,12 @@
       }
     },
     "profileCodes": {
-      "$shortCode": {
-        ".read": "auth != null",
-        ".write": "auth != null && !data.exists() && newData.child('uid').val() == auth.uid"
-      }
+      ".read": false,
+      ".write": false
+    },
+    "recoveryRateLimits": {
+      ".read": false,
+      ".write": false
     }
   }
 }
