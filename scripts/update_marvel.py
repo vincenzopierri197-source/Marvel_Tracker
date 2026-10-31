@@ -1,121 +1,264 @@
 #!/usr/bin/env python3
-"""
-Aggiornatore prudente del Marvel Tracker.
+"""Aggiorna in modo prudente il catalogo Marvel usando Gemini + Google Search grounding.
 
-Fonte:
-https://www.sorrisi.com/cinema/migliori-film/la-lista-dei-film-marvel-ordine-cronologico/
-
-La pagina può bloccare richieste automatiche. In quel caso lo script NON
-modifica i dati esistenti e termina senza errore, così il sito resta online.
-Quando trova titoli nuovi riconoscibili, li inserisce in una sezione separata
-"Nuovi titoli dalla fonte", lasciando intatto l'elenco curato manualmente.
+Le sezioni curate (ordini Marvel e uscita) non vengono mai riscritte dall'AI.
+Le notizie sono mostrate separatamente e includono link restituiti dal grounding.
+I nuovi titoli vengono proposti in una sezione distinta solo se hanno fonte URL.
 """
 from __future__ import annotations
+
 import json
+import os
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
-from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "marvel.json"
-URL = "https://www.sorrisi.com/cinema/migliori-film/la-lista-dei-film-marvel-ordine-cronologico/"
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
+TIMEOUT = 90
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-KEYWORDS = [
-    "avengers", "captain america", "capitan america", "iron man", "thor",
-    "hulk", "guardiani della galassia", "guardians of the galaxy", "ant-man",
-    "black panther", "spider-man", "doctor strange", "loki", "wandavision",
-    "falcon", "winter soldier", "shang-chi", "eternals", "hawkeye",
-    "moon knight", "she-hulk", "ms marvel", "werewolf", "licantropus",
-    "secret invasion", "the marvels", "echo", "daredevil", "agatha",
-    "thunderbolts", "ironheart", "fantastici quattro", "fantastic four",
-    "visionquest", "vision quest", "wonder man", "x-men", "zombies",
-    "blade", "deadpool", "venom", "morbius", "armor wars", "brand new day",
-]
 
-def clean(text: str) -> str:
-    text = re.sub(r"\s+", " ", text).strip(" \t\r\n•·-")
-    # Elimina date/anno alla fine, senza alterare il titolo.
-    text = re.sub(r"\s*\((?:19|20)\d{2}(?:\s*[-–]\s*(?:19|20)\d{2})?\)\s*$", "", text)
-    return text.strip()
+def slug(value: str) -> str:
+    import unicodedata
+    value = unicodedata.normalize("NFKD", value.lower())
+    value = "".join(c for c in value if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", "-", value).strip("-")
 
-def is_candidate(text: str) -> bool:
-    t = text.lower()
-    if not (2 <= len(text) <= 110):
+
+def valid_http_url(value: object) -> bool:
+    if not isinstance(value, str):
         return False
-    if any(x in t for x in ("cookie", "newsletter", "abbonati", "pubblicità", "leggi anche")):
-        return False
-    return any(k in t for k in KEYWORDS)
+    parsed = urlparse(value)
+    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
 
-def infer_type(title: str) -> str:
-    t = title.lower()
-    serie_markers = (
-        "stagione", "season", "serie", "what if", "loki", "wandavision",
-        "falcon and the winter soldier", "echo", "daredevil", "agatha",
-        "ironheart", "hawkeye", "moon knight", "she-hulk", "ms marvel",
-        "x-men '97", "marvel zombies", "wonder man", "i am groot"
+
+def extract_json(text: str) -> dict:
+    text = text.strip()
+    text = re.sub(r"^\x60{3}(?:json)?\s*|\s*\x60{3}$", "", text, flags=re.I)
+    try:
+        value = json.loads(text)
+        if isinstance(value, dict):
+            return value
+    except json.JSONDecodeError:
+        pass
+    match = re.search(r"\{[\s\S]*\}", text)
+    if not match:
+        raise ValueError("Gemini non ha restituito un oggetto JSON.")
+    value = json.loads(match.group(0))
+    if not isinstance(value, dict):
+        raise ValueError("La risposta Gemini non è un oggetto JSON.")
+    return value
+
+
+def call_gemini(api_key: str, data: dict) -> tuple[dict, list[dict], list[str]]:
+    existing_titles = [
+        item.get("title", "")
+        for order in data.get("orders", {}).values()
+        for section in order.get("sections", [])
+        for item in section.get("items", [])
+        if item.get("title")
+    ]
+    prompt = f"""
+Sei un ricercatore editoriale per un tracker Marvel in lingua italiana.
+Usa Google Search per trovare aggiornamenti verificabili pubblicati o confermati
+di recente su film, serie, date d'uscita, trailer, casting e annunci ufficiali
+Marvel Studios / Marvel Television. Dai priorità a Marvel.com, Disney+, comunicati
+ufficiali e fonti giornalistiche affidabili. Distingui le date confermate dalle
+indiscrezioni; escludi rumor non confermati. La data corrente è {datetime.now(timezone.utc).date().isoformat()}.
+Titoli già presenti nel catalogo (non proporli come nuovi): {json.dumps(existing_titles, ensure_ascii=False)}.
+Rispondi SOLO con JSON valido, senza Markdown, con questa struttura:
+{{
+ "researchUpdates":[
+  {{"title":"titolo breve in italiano","summary":"riassunto fattuale breve in italiano, specifica se ufficiale o rumor","date":"YYYY-MM-DD oppure stringa vuota","sources":[{{"title":"titolo fonte","url":"URL esatto"}}]}}
+ ],
+ "sourceUpdates":[
+  {{"title":"titolo ufficiale film/serie Marvel nuovo o appena confermato","type":"film oppure serie","year":2027,"source":"URL esatto della fonte"}}
+ ]
+}}
+Massimo 8 notizie e 8 titoli nuovi. Ogni notizia deve avere almeno una fonte URL.
+Non inventare URL o date. Se non trovi novità affidabili, usa liste vuote.
+"""
+
+    payload = {
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "tools": [{"google_search": {}}],
+        "generationConfig": {"responseMimeType": "application/json"},
+    }
+    response = requests.post(
+        API_URL,
+        params={"key": api_key},
+        json=payload,
+        timeout=TIMEOUT,
     )
-    return "serie" if any(x in t for x in serie_markers) else "film"
+    if not response.ok:
+        detail = response.text[:1200]
+        raise RuntimeError(f"Gemini API HTTP {response.status_code}: {detail}")
+    result = response.json()
+    candidates = result.get("candidates") or []
+    if not candidates:
+        raise RuntimeError("Gemini non ha restituito candidati.")
+    parts = candidates[0].get("content", {}).get("parts", [])
+    text = "\n".join(part.get("text", "") for part in parts if part.get("text"))
+    parsed = extract_json(text)
 
-def slug(title: str) -> str:
-    t = title.lower()
-    t = re.sub(r"[^a-z0-9àèéìòù]+", "-", t)
-    return t.strip("-")
+    metadata = candidates[0].get("groundingMetadata") or {}
+    grounded_sources: list[dict] = []
+    for chunk in metadata.get("groundingChunks", []):
+        web = chunk.get("web") or {}
+        url = web.get("uri")
+        title = web.get("title") or url
+        if valid_http_url(url) and url not in {s["url"] for s in grounded_sources}:
+            grounded_sources.append({"title": title, "url": url})
+    queries = metadata.get("webSearchQueries") or []
+    return parsed, grounded_sources, queries
 
-def main():
-    data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+
+def call_groq(api_key: str, gemini_result: dict, grounded_sources: list[dict]) -> dict:
+    """Usa Groq per rifinire il JSON, senza permettere fonti fuori dal grounding Google."""
+    system = (
+        "Sei un redattore italiano. Restituisci esclusivamente JSON valido con le chiavi "
+        "researchUpdates e sourceUpdates. Non aggiungere fatti, date, titoli o URL non "
+        "presenti nell'input. Mantieni soltanto URL presenti nell'elenco delle fonti Google."
+    )
+    user = {
+        "geminiResearch": gemini_result,
+        "googleGroundedSources": grounded_sources,
+        "requiredSchema": {
+            "researchUpdates": [{"title": "", "summary": "", "date": "", "sources": [{"title": "", "url": ""}]}],
+            "sourceUpdates": [{"title": "", "type": "film oppure serie", "year": 2027, "source": ""}]
+        }
+    }
+    response = requests.post(
+        GROQ_API_URL,
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        json={
+            "model": GROQ_MODEL,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": json.dumps(user, ensure_ascii=False)}
+            ],
+            "temperature": 0.1,
+            "response_format": {"type": "json_object"}
+        },
+        timeout=TIMEOUT,
+    )
+    if not response.ok:
+        raise RuntimeError(f"Groq API HTTP {response.status_code}: {response.text[:1200]}")
+    choices = response.json().get("choices") or []
+    if not choices:
+        raise RuntimeError("Groq non ha restituito risposte.")
+    return extract_json(choices[0].get("message", {}).get("content", ""))
+
+
+def normalize(data: dict, ai: dict, grounded_sources: list[dict]) -> tuple[int, int]:
+    # Allowlist: the AI may only emit source URLs actually returned by Google grounding.
+    allowed = {s["url"]: s for s in grounded_sources}
+    research = []
+    for item in ai.get("researchUpdates", []):
+        if not isinstance(item, dict) or not str(item.get("title", "")).strip():
+            continue
+        sources = []
+        for source in item.get("sources", []):
+            if not isinstance(source, dict):
+                continue
+            url = source.get("url")
+            if url in allowed:
+                sources.append({"title": str(source.get("title") or allowed[url]["title"])[:200], "url": url})
+        if not sources:
+            continue
+        research.append({
+            "title": str(item["title"]).strip()[:180],
+            "summary": str(item.get("summary") or "").strip()[:700],
+            "date": str(item.get("date") or "").strip()[:32],
+            "sources": sources[:4],
+        })
+    # Deduplicate updates by title, preserving the freshest run's order.
+    seen = set()
+    cleaned_research = []
+    for item in research:
+        key = slug(item["title"])
+        if key and key not in seen:
+            seen.add(key)
+            cleaned_research.append(item)
+
     existing = {
-        slug(item["title"])
-        for section in data.get("sections", [])
+        slug(item.get("title", ""))
+        for order in data.get("orders", {}).values()
+        for section in order.get("sections", [])
         for item in section.get("items", [])
     }
-    existing.update(slug(item["title"]) for item in data.get("sourceUpdates", []))
-
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (compatible; MarvelTracker/1.0; "
-            "+https://github.com/)"
-        ),
-        "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
-    }
-
-    try:
-        response = requests.get(URL, headers=headers, timeout=25)
-        response.raise_for_status()
-    except Exception as exc:
-        print(f"Fonte non raggiungibile ({exc}). Mantengo i dati esistenti.")
-        return
-
-    soup = BeautifulSoup(response.text, "html.parser")
-    candidates = []
-
-    for node in soup.select("h2, h3, h4, li"):
-        text = clean(node.get_text(" ", strip=True))
-        if is_candidate(text):
-            candidates.append(text)
-
-    # Mantieni l'ordine della pagina e rimuovi duplicati.
-    seen = set()
-    candidates = [x for x in candidates if not (slug(x) in seen or seen.add(slug(x)))]
-
-    new_items = [
-        {"title": title, "type": infer_type(title), "source": URL}
-        for title in candidates
-        if slug(title) not in existing
+    existing.update(slug(item.get("title", "")) for item in data.get("sourceUpdates", []))
+    proposed = []
+    for item in ai.get("sourceUpdates", []):
+        if not isinstance(item, dict):
+            continue
+        title = str(item.get("title") or "").strip()[:180]
+        typ = str(item.get("type") or "").lower()
+        year = item.get("year")
+        source = item.get("source")
+        if not title or typ not in {"film", "serie"} or not isinstance(year, int) or not 1930 <= year <= 2100:
+            continue
+        if not valid_http_url(source) or source not in allowed:
+            continue
+        key = slug(title)
+        if not key or key in existing:
+            continue
+        existing.add(key)
+        proposed.append({"title": title, "type": typ, "year": year, "source": source, "status": "da verificare"})
+    # Keep recent results first and avoid unbounded growth.
+    data["researchUpdates"] = cleaned_research[:12]
+    data["sourceUpdates"] = proposed + [
+        item for item in data.get("sourceUpdates", [])
+        if slug(item.get("title", "")) not in {slug(x["title"]) for x in proposed}
     ]
+    data["sourceUpdates"] = data["sourceUpdates"][:100]
+    return len(data["researchUpdates"]), len(proposed)
 
-    if new_items:
-        data["sourceUpdates"] = data.get("sourceUpdates", []) + new_items
-        print("Nuovi titoli trovati:")
-        for item in new_items:
-            print(" -", item["title"])
-    else:
-        print("Nessun nuovo titolo riconosciuto.")
 
-    data["updatedAt"] = datetime.now(timezone.utc).isoformat()
-    DATA_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+def main() -> int:
+    if not DATA_FILE.exists():
+        print(f"ERRORE: file dati mancante: {DATA_FILE}", file=sys.stderr)
+        return 1
+    try:
+        data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"ERRORE: catalogo JSON non valido: {exc}", file=sys.stderr)
+        return 1
+    if not data.get("orders", {}).get("marvel", {}).get("sections"):
+        print("ERRORE: schema orders.marvel.sections mancante; non sovrascrivo il catalogo.", file=sys.stderr)
+        return 1
+    gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
+    groq_key = os.getenv("GROQ_API_KEY", "").strip()
+    if not gemini_key or not groq_key:
+        missing = [name for name, value in (("GEMINI_API_KEY", gemini_key), ("GROQ_API_KEY", groq_key)) if not value]
+        print("ERRORE: configura i secrets GitHub mancanti: " + ", ".join(missing), file=sys.stderr)
+        return 1
+    try:
+        gemini_result, sources, queries = call_gemini(gemini_key, data)
+        ai = call_groq(groq_key, gemini_result, sources)
+        news_count, new_titles = normalize(data, ai, sources)
+        data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+        data["lastUpdate"] = {
+            "status": "success",
+            "model": MODEL + " + " + GROQ_MODEL,
+            "sourceCount": len(sources),
+            "searchQueries": queries[:10],
+        }
+        DATA_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"Aggiornamento completato: {news_count} notizie con fonti, {new_titles} nuovi titoli proposti, {len(sources)} fonti grounding.")
+        return 0
+    except Exception as exc:
+        print(f"ERRORE aggiornamento Gemini/Groq: {exc}", file=sys.stderr)
+        return 1
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
